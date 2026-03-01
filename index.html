@@ -2,101 +2,116 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>MENDADAK BUKBER IANA</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #f8f5f2;
-      font-family: 'Montserrat', sans-serif;
-      color: #333;
-      text-align: center;
+    body{
+      margin:0;
+      font-family:'Montserrat',sans-serif;
+      background:#f8f5f2;
+      text-align:center;
     }
-
-    .card {
-      max-width: 650px;
-      margin: 50px auto;
-      background: #ffffff;
-      padding: 50px 30px;
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    .card{
+      max-width:700px;
+      margin:40px auto;
+      background:white;
+      padding:40px;
+      border-radius:12px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.08);
     }
-
-    h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 42px;
-      margin-bottom: 10px;
-      letter-spacing: 2px;
+    h1{
+      font-family:'Playfair Display',serif;
+      margin:0;
     }
-
-    .subtitle {
-      font-size: 16px;
-      letter-spacing: 3px;
-      margin-bottom: 30px;
-      color: #777;
+    input, textarea{
+      width:100%;
+      padding:10px;
+      margin:8px 0;
+      border-radius:6px;
+      border:1px solid #ddd;
+      font-family:inherit;
     }
-
-    .event-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 28px;
-      margin: 20px 0;
+    button{
+      padding:10px 20px;
+      border:none;
+      background:#c8a96a;
+      color:white;
+      border-radius:6px;
+      cursor:pointer;
     }
-
-    .details {
-      font-size: 18px;
-      margin: 10px 0;
-    }
-
-    .price {
-      margin-top: 25px;
-      font-size: 20px;
-      font-weight: 600;
-    }
-
-    .footer {
-      margin-top: 40px;
-      font-size: 14px;
-      color: #888;
-    }
-
-    .divider {
-      width: 60px;
-      height: 2px;
-      background: #c8a96a;
-      margin: 25px auto;
+    .comment{
+      text-align:left;
+      background:#fafafa;
+      padding:10px;
+      margin:8px 0;
+      border-radius:6px;
     }
   </style>
 </head>
+
 <body>
-
 <div class="card">
-  <div class="subtitle">YOU ARE INVITED TO</div>
+  <h1>MENDADAK BUKBER IANA</h1>
+  <p>📅 7 Maret 2026</p>
+  <p>📍 Grand Whiz</p>
+  <p>💰 Rp 190.000 / orang</p>
 
-  <h1>MENDADAK BUKBER</h1>
-  <div class="event-title">IANA</div>
+  <hr style="margin:30px 0;">
 
-  <div class="divider"></div>
+  <h3>Guest Comment</h3>
 
-  <div class="details">
-    📅 Sabtu, 7 Maret 2026
-  </div>
+  <input type="text" id="name" placeholder="Nama kamu"/>
+  <textarea id="message" rows="3" placeholder="Tulis pesan..."></textarea>
+  <button onclick="submitComment()">Kirim</button>
 
-  <div class="details">
-    📍 Grand Whiz
-  </div>
-
-  <div class="price">
-    💰 Rp 190.000 / orang
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="footer">
-    Kehadiran kamu ditunggu ya ✨
-  </div>
+  <div id="comments" style="margin-top:20px;"></div>
 </div>
+
+<script>
+  const client = supabase.createClient(
+    "https://mnxhweqpdcmjkddcprwx.supabase.co",
+    "sb_publishable_2lD_q5LsH1QJujWzUR1P0A_Z2Z9Hjwv"
+  );
+
+  async function loadComments(){
+    const { data } = await client
+      .from('iana_iftar')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    const container = document.getElementById('comments');
+    container.innerHTML = '';
+    data.forEach(c => {
+      container.innerHTML += `
+        <div class="comment">
+          <b>${c.name}</b><br/>
+          ${c.message}
+        </div>
+      `;
+    });
+  }
+
+  async function submitComment(){
+    const name = document.getElementById('name').value;
+    const message = document.getElementById('message').value;
+
+    if(!name || !message) return alert("Isi dulu ya.");
+
+    await client.from('iana_iftar').insert([{ name, message }]);
+
+    document.getElementById('name').value = '';
+    document.getElementById('message').value = '';
+
+    loadComments();
+  }
+
+  loadComments();
+</script>
 
 </body>
 </html>
