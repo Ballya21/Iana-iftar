@@ -384,6 +384,12 @@
   }
 
   loadComments();
+  client
+    .channel('iana_iftar')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'iana_iftar' }, () => {
+      loadComments();
+    })
+    .subscribe();
 </script>
 
 <canvas id="particles"></canvas>
