@@ -31,15 +31,15 @@
     width:92%;
     max-width:480px;
     margin:20px auto;
-    background: rgba(255,255,255,0.04);
+    background: rgba(212,175,55,0.04);
     backdrop-filter: blur(12px);
     padding:25px 18px;
     border-radius:18px;
-    border:1px solid rgba(212,175,55,0.15);
+    border:1px solid rgba(212,175,55,0.25);
     box-shadow:0 20px 50px rgba(0,0,0,0.4);
   }
 
-  p{ margin:6px 0; font-size:14px; }
+  p{ margin:6px 0; font-size:16px; color:#e8d5a3;}
   h3{ margin-top:20px; font-size:16px; }
 
   input, textarea{
@@ -204,7 +204,7 @@
     100%{ background-position:300% }
   }
 
-  .subtitle-top{ font-size:11px; letter-spacing:3px; color:#e8d8a8; margin-bottom:8px; }
+  .subtitle-top{ font-size:11px; letter-spacing:5px; color:#e8d8a8; margin-bottom:8px; }
   .subtitle-bottom{ font-size:12px; color:#ddd; margin-top:12px; letter-spacing:2px; }
 
   .gold-divider{
@@ -221,9 +221,10 @@
     padding:10px 14px;
     border-radius:10px;
     border:1px solid rgba(212,175,55,0.2);
+    box-shadow: 0 0 15px rgba(212,175,55,0.1);
   }
 
-  .countdown span{ font-size:18px; color:#f4d27a; display:block; }
+  .countdown span{ font-size:18px; color:#ffe98a; display:block; }
   .countdown small{ font-size:10px; color:#aaa; }
   </style>
 </head>
@@ -237,7 +238,7 @@
         <p class="subtitle-top">YOU ARE INVITED TO</p>
         <div class="gold-text"></div>
         <div class="gold-divider"></div>
-        <p class="subtitle-bottom">Ramadan Gathering 2026</p>
+        <p class="subtitle-bottom">Ramadhan Gathering 2026</p>
       </div>
     </div>
   </div>
@@ -250,20 +251,19 @@
 
   <p>📅 7 Maret 2026</p>
   <p>💰 Rp 190.000 / orang</p>
-  <p>📍 Grand Whiz Poins Simatupang Jakarta</p>
 
   <div style="margin-top:20px;">
-    <h3>Lokasi</h3>
-    <div style="border-radius:12px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,0.08);">
+    <p>📍 Grand Whiz Poins Simatupang Jakarta</p>
+    <div style="border-radius:12px; overflow:hidden; box-shadow:0 0 20px rgba(212,175,55,0.15), 0 6px 18px rgba(0,0,0,0.4); border:1px solid rgba(212,175,55,0.2);">
       <iframe
               src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7931.604071242892!2d106.775351!3d-6.289731!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f1ce1980d2a3%3A0xe6757bc534626033!2sGrand%20Whiz%20Poins%20Simatupang%20Jakarta!5e0!3m2!1sid!2skr!4v1772331409907!5m2!1sid!2skr"
               width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy">
       </iframe>
     </div>
-    <p style="font-size:12px; color:#777; margin-top:6px;">Tap map untuk buka di Google Maps</p>
+    <a href="https://www.google.com/maps/place/Grand+Whiz+Poins+Simatupang+Jakarta/@-6.289946,106.778151,14z/data=!4m9!3m8!1s0x2e69f1ce1980d2a3:0xe6757bc534626033!5m2!4m1!1i2!8m2!3d-6.2899462!4d106.7781514!16s%2Fg%2F11c2jl0gy8?hl=id&entry=ttu&g_ep=EgoyMDI2MDIyNS4wIKXMDSoASAFQAw%3D%3D" target="_blank" style="display:block; font-size:12px; color:#c8a96a; margin-top:8px; letter-spacing:1px; text-decoration:none;">↗ Buka di Google Maps</a>
   </div>
 
-  <hr style="margin:30px 0;">
+  <div style="width:60px; height:2px; margin:30px auto; background:linear-gradient(to right, transparent, #d4af37, transparent); box-shadow:0 0 10px rgba(212,175,55,0.6);"></div>
 
   <h3>Guest Comment</h3>
   <input type="text" id="name" placeholder="Nama kamu"/>
@@ -287,38 +287,64 @@
 
     const container = document.getElementById('comments');
     container.innerHTML = '';
-
     data.forEach(c => {
       const initials = c.name.charAt(0).toUpperCase();
       const time = new Date(c.created_at).toLocaleString('id-ID');
 
-      container.innerHTML += `
-        <div class="comment">
-          <div class="comment-header">
-            <div class="avatar">${initials}</div>
-            <div>
-              <b>${c.name}</b>
-              <div class="time">${time}</div>
-            </div>
-          </div>
-          <div class="message">${c.message}</div>
-        </div>
-      `;
+      const div = document.createElement('div');
+      div.className = 'comment';
+
+      const header = document.createElement('div');
+      header.className = 'comment-header';
+
+      const avatar = document.createElement('div');
+      avatar.className = 'avatar';
+      avatar.textContent = initials;
+
+      const info = document.createElement('div');
+      const bold = document.createElement('b');
+      bold.textContent = c.name;
+      const timeEl = document.createElement('div');
+      timeEl.className = 'time';
+      timeEl.textContent = time;
+      info.appendChild(bold);
+      info.appendChild(timeEl);
+
+      header.appendChild(avatar);
+      header.appendChild(info);
+
+      const message = document.createElement('div');
+      message.className = 'message';
+      message.textContent = c.message;
+
+      div.appendChild(header);
+      div.appendChild(message);
+      container.appendChild(div);
     });
   }
 
   async function submitComment(){
     const name = document.getElementById('name').value.trim();
     const message = document.getElementById('message').value.trim();
+    const btn = document.querySelector('button');
 
     if(!name || !message) return alert("Isi dulu ya.");
 
-    await client.from('iana_iftar').insert([{ name, message }]);
+    btn.disabled = true;
+    btn.textContent = 'Mengirim...';
 
-    document.getElementById('name').value = '';
-    document.getElementById('message').value = '';
+    const { error } = await client.from('iana_iftar').insert([{ name, message }]);
 
-    loadComments();
+    if(error){
+      alert("Gagal kirim, coba lagi ya.");
+    } else {
+      document.getElementById('name').value = '';
+      document.getElementById('message').value = '';
+      await loadComments();
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Kirim';
   }
 
   loadComments();
